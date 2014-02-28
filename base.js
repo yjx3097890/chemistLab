@@ -1,6 +1,6 @@
 /**
  * 基类
- * @param options : type 器材类型, ot 中心到杯最向量, canFire 是否能点燃, detail, scale 大小缩放, direct 器材朝向
+ * @param options : type 器材类型, ot 中心到杯嘴向量, canFire 是否能点燃, detail, scale 大小缩放, direct 器材朝向,name 名字
  * @constructor
  */
 Chemist.Base = function (options) {
@@ -36,6 +36,9 @@ Chemist.Base = function (options) {
         this.fire = null;
     }
 
+    this.onIronSupport = false;
+
     this.detail = Chemist.clone(options.detail);
+    this.name = options.name || options.detail.name;
 
 };

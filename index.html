@@ -14,19 +14,7 @@
            <ul class="nav navbar-nav">
             	<li>
                     <div class="btn btn-info" >器材<div class="arrow" ></div></div>
-                    <ul>
-                        <li>
-                            <img src="images/beaker.jpg" alt="beaker" id="beaker"/>
-                        </li>
-                        <li>
-                            <img src="images/burner.jpg" alt="burner" id="burner"/>
-                        </li>
-                        <li>
-                            <img src="images/testTube.jpg" alt="testTube" id="testTube"/>
-                        </li>
-                        <li>
-                            <img src="images/pipe.jpg" alt="pipe" id="pipe"/>
-                        </li>
+                    <ul id = "equipments">
                      
                     </ul>
                     
@@ -155,6 +143,8 @@
         <script type="text/javascript" src="libs/CurveExtras.js"></script>
         <script type="text/javascript" src="libs/ColumnControls.js"></script>
         <script type="text/javascript" src="libs/OBJLoader.js"></script>
+        <script type="text/javascript" src="libs/MTLLoader.js"></script>
+        <script type="text/javascript" src="libs/OBJMTLLoader.js"></script>
         <script type="text/javascript" src="libs/EffectComposer.js"></script>
 		<script type="text/javascript" src="libs/ShaderPass.js"></script>
 		<script type="text/javascript" src="libs/MaskPass.js"></script>
@@ -194,6 +184,7 @@
         <script type="text/javascript" src="platform.js"></script>
         <script type="text/javascript" src="beaker.js"></script>
         <script type="text/javascript" src="bottle.js"></script>
+        <script type="text/javascript" src="ironSupport.js"></script>
         <script type="text/javascript" src="testTube.js"></script>
         <script type="text/javascript" src="stick.js"></script>
         <script type="text/javascript" src="burner.js"></script>
@@ -201,15 +192,13 @@
         <script type="text/javascript" src="fire.js"></script>
         <script type="text/javascript" src="animation.js"></script>
         <script type="text/javascript" src="reactions.js"></script>
-      
         
         <script type="text/javascript">
        
             Chemist.plane = new Chemist.Platform({img:"textures/Blue.jpg"});
             Chemist.objects.push(Chemist.plane);
             Chemist.scene.add(Chemist.plane);
-       
-              
+
             Chemist.virtualPlaneH = new Chemist.Platform();
             Chemist.virtualPlaneH.scale.set(2,3,5);
             Chemist.virtualPlaneH.visible = false; 

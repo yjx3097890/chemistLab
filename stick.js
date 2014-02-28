@@ -9,7 +9,7 @@
  * transparent : 是否为玻璃棒
  **/
 
-Chemist.Stick = function (position, scale, stuff, transparent) {
+Chemist.Stick = function (position, scale, stuff, name, transparent) {
      var stick, material, geometry,
          length = 2, radius = 0.08;
 
@@ -31,10 +31,11 @@ Chemist.Stick = function (position, scale, stuff, transparent) {
         type: Chemist.type.tool,
         scale: scale,
         direct: new THREE.Vector3(0, 1, 0),
-        canFire: true
+        canFire: true,
+        name: name
     });
 
-    stick.length = length;
+    stick.length = length * scale;
 
     stick.stuff = stuff;
 

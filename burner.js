@@ -5,22 +5,22 @@
  * @constructor
  */
 Chemist.Burner = function (position, callback) {
-     var burner = null;
+     var burner = null, scale = 0.008;
      
-    Chemist.objLoader.load("obj/beaker.obj", function (objects) {
+    Chemist.objLoader.load("obj/burner.obj", function (objects) {
         burner = objects.children[0];
 
-    //    burner.material.transparent = true;
+        burner.material.transparent = true;
         burner.material.opacity = 0.3;
         burner.material.refractionRatio = 0.85;
         burner.position.copy(position);
-        burner.scale.set(0.5, 0.5, 0.5);
+        burner.scale.set(scale, scale, scale);
         burner.castShadow = true;
 
         Chemist.Base.call(burner, {
             type: Chemist.type.instrument,
             canFire: true,
-            scale: 0.5,
+            scale: scale,
             direct: new THREE.Vector3(0, 1, 0),
             detail: Chemist.Equips.burner
         });

@@ -51,6 +51,7 @@ var Chemist = {
         composer : null,
         projector : new THREE.Projector(),
         objLoader : new THREE.OBJLoader(),
+        OTLoader : new THREE.OBJMTLLoader(),
 
 
         ambientLient : new THREE.AmbientLight(0x9C9C9C),
@@ -791,8 +792,9 @@ var Chemist = {
             obj.pipes.length = 0;
         }
 
+
         //导管
-        if (obj.name === "pipe"){
+        if (obj.name === "pipe" || obj.name === "ironSupport" || obj.name === "ironSupport_bar" ){
             obj.dispatchEvent({type: "delete"});
         }else{
             Chemist.objects.remove(obj);
@@ -838,7 +840,9 @@ var Chemist = {
             for (var i = obj.pipes.length -1; i >= 0; i-- ) {
                 var pipe = obj.pipes[i];
                 pipe.position.copy(obj.position);
-                pipe.position.y = obj.height - 1;
+
+                pipe.position.y += obj.height  ;
+
                 pipe.dispatchEvent({type:"move", position: pipe.position.clone()});
             }
          }
@@ -855,8 +859,12 @@ var Chemist = {
 
          if(obj.detail && obj.detail.name === "pipe") {
              obj.dispatchEvent({type:"move", position: obj.position.clone()});
-
          }
+
+         if(obj.detail && obj.detail.name === "ironSupport") {
+            obj.dispatchEvent({type:"move", pos: obj.position.clone()});
+         }
+
     },
 
         isOnFire : function (obj, fireObj) {

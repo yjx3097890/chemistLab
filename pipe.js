@@ -55,13 +55,7 @@ Chemist.Pipe = function (position) {
     piper.detail.side = "right";
     pipel.detail.side = "left";
 
-    var geometry = new THREE.Geometry(),
-        lineMaterial = new THREE.LineBasicMaterial({color:0xffffff, opacity:0.3, transparent: true, linewidth:1});
-    geometry.vertices.push(pipel.position.clone());
-    geometry.vertices.push(piper.position.clone());
-    pipel.line = piper.line = new THREE.Line(geometry, lineMaterial);
 
-    pipel.line.visible= false;
 
     /**
      *
@@ -136,10 +130,7 @@ Chemist.Pipe = function (position) {
                 high = new THREE.Vector3(0, this.length/2,0);
             if(this.anotherSide.fixed){
                 this.position.copy(event.position);
-                this.line.geometry.vertices[0]=this.position.clone().add(high);
-                this.line.geometry.vertices[1]=this.anotherSide.position.clone().add(high);
-                this.line.geometry.verticesNeedUpdate =  true;
-                this.line.visible = true;
+                this.dispatchEvent({type:'createBody', position: this.position});
             }else{
                 this.position.copy(event.position);
                 this.body.position.copy(event.position).add(high).add(dir);
@@ -148,13 +139,11 @@ Chemist.Pipe = function (position) {
                     this.anotherSide.position.y = Chemist.pipePosition.y - this.length / 2;
                     this.dispatchEvent({type:'createBody', position: this.position});
                 }
-                this.line.visible = false;
             }
         },
         onCreateBody = function (event) {
             Chemist.scene.remove(this.body);
             Chemist.objects.remove(this.body);
-            this.line.visible = false;
             var dir =  this.body.right.position.clone().sub(this.body.left.position),
                 length = dir.length(),
                 oldDir = new THREE.Vector3(1,0,0),
@@ -263,7 +252,6 @@ Chemist.Pipe = function (position) {
     Chemist.scene.add(pipe);
     Chemist.scene.add(pipel);
     Chemist.scene.add(piper);
-    Chemist.scene.add(pipel.line);
 
     Chemist.objects.push(pipe);
     Chemist.objects.push(pipel);

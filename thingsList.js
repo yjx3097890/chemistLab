@@ -53,6 +53,15 @@
             create : function () {
                 Chemist.Pipe(Chemist.pipePosition);
             }
+        },
+
+        ironSupport : {
+            name : "ironSupport",
+            id: "ironSupport",
+            img : ip + "ironSupport.jpg",
+            create : function () {
+                Chemist.IronSupport(Chemist.center);
+            }
         }
         
     };

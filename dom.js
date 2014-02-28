@@ -13,7 +13,10 @@
         if (Chemist.selected) {
             Chemist.selected.intersectVessel = Chemist.getIntersectVessel(Chemist.selected);
             if (  Chemist.selected.intersectVessel && (!Chemist.selected.oldIntersectVessel || Chemist.selected.intersectVessel !== Chemist.selected.oldIntersectVessel) ) {
-                Chemist.selected.oldIntersectVessel = Chemist.selected.intersectVessel;
+                if(!Chemist.selected.oldIntersectVessel || Chemist.selected.oldIntersectVessel.name !== "ironSupport") {
+
+                    Chemist.selected.oldIntersectVessel = Chemist.selected.intersectVessel;
+                }
             }
         }
 
@@ -87,7 +90,7 @@
                     document.removeEventListener("mousemove", moveObject, false );
                  }
                 if (intersectVessel && Chemist.selected.fire && intersectVessel.canFire === true && !intersectVessel.fire) {
-                    generateFire(intersectVessel, new THREE.Vector3(0, 1, 0), null, true);
+                    generateFire(intersectVessel, new THREE.Vector3(0, 0.8, 0), null, true);
                 }
 
             }else if ( Chemist.selected.type === Chemist.type.instrument) {   //移动设备
@@ -139,19 +142,55 @@
 
             Chemist.moveObj(Chemist.selected, position);
 
-
-
     };
 
 
     //移动容器over
     var moveVesselOver = function (event) {
-            
+           var sele =  Chemist.selected;
          if( event.button === 0 ){
             Chemist.selected.position.y = Chemist.beakerPosition.y;
         }else if (event.button === 2) {
             //放开右键，使selected回到桌面
             Chemist.selected.position.y = Chemist.beakerPosition.y;
+        }
+
+        //烧杯
+        if (sele.name === "beaker" ) {
+
+            if(sele.oldIntersectVessel && sele.oldIntersectVessel.beaker === sele) {
+                sele.oldIntersectVessel.beaker = null;
+                sele.oldIntersectVessel = null;
+                sele.onIronSupport = false;
+            }
+
+            if(sele.intersectVessel && sele.intersectVessel.name === "ironSupport" && !sele.intersectVessel.beaker && !sele.intersectVessel.testTube){
+                sele.intersectVessel.beaker = sele;
+                sele.intersectVessel.clamp.visible = false;
+                sele.intersectVessel.ring.visible = true;
+                sele.onIronSupport = true;
+                Chemist.moveObj(sele, sele.intersectVessel.position.clone().add(sele.intersectVessel.beakerPosition));
+            }
+
+        }
+
+        //试管
+        if (sele.name === "testTube" ) {
+
+            if(sele.oldIntersectVessel && sele.oldIntersectVessel.testTube === sele) {
+                sele.oldIntersectVessel.testTube = null;
+                sele.oldIntersectVessel = null;
+                sele.onIronSupport = false;
+            }
+
+            if(sele.intersectVessel && sele.intersectVessel.name === "ironSupport" && !sele.intersectVessel.beaker && !sele.intersectVessel.testTube){
+                sele.intersectVessel.testTube = sele;
+                sele.intersectVessel.clamp.visible = true;
+                sele.intersectVessel.ring.visible = false;
+                sele.onIronSupport = true;
+                Chemist.moveObj(sele, sele.intersectVessel.position.clone().add(sele.intersectVessel.tubePosition));
+            }
+
         }
 
         if( Chemist.selected.pipes && Chemist.selected.pipes.length > 0 ) {
@@ -199,90 +238,92 @@
 
     //移动instrument over  , 酒精灯等
       var moveEquipsOver = function () {
-          Chemist.selected.position.y = Chemist.beakerPosition.y;
+          var sele =Chemist.selected;
+         sele.position.y = Chemist.beakerPosition.y;
 
-          if(Chemist.selected.name === "pipe") {
+           //导管
+          if(sele.name === "pipe") {
 
-                if (Chemist.selected.getStatus() === Chemist.status.linking || ( Chemist.selected.body && Chemist.selected.body.getStatus() === Chemist.status.linking) )  {
+                if (sele.getStatus() === Chemist.status.linking || (sele.body &&sele.body.getStatus() === Chemist.status.linking) )  {
                     //有绑定
 
-                    if (Chemist.selected.left) {
+                    if (sele.left) {
                         //select是主体
-                        Chemist.selected.position.y = Chemist.pipePosition.y;
-                        if (Chemist.selected.left.fixed) {
-                            var left = Chemist.selected.left;
+                       sele.position.y = Chemist.pipePosition.y;
+                        if (sele.left.fixed) {
+                            var left =sele.left;
                             left.material.opacity = 0.3;
                             Chemist.objects.push(left);
                             left.link.pipes.remove(left);
                             left.link = null;
                             left.fixed = false;
                         }
-                        if (Chemist.selected.right.fixed) {
-                            var right = Chemist.selected.right;
+                        if (sele.right.fixed) {
+                            var right =sele.right;
                             right.material.opacity = 0.3;
                             Chemist.objects.push(right);
                             right.link.pipes.remove(right);
                             right.link = null;
                             right.fixed = false;
                         }
-                        Chemist.selected.left.line.visible = false;
-                        Chemist.selected.status.pop();
-                        Chemist.moveObj(Chemist.selected);
-                    }else if (Chemist.selected.body) {
+
+                       sele.status.pop();
+                        Chemist.moveObj(sele);
+                    }else if (sele.body) {
                         //select是两侧分支
-                        Chemist.selected.position.y = Chemist.pipePosition.y - Chemist.selected.length / 2;
+                       sele.position.y = Chemist.pipePosition.y -sele.length / 2;
 
                         //绑定事件
-                        if(Chemist.selected.intersectVessel && Chemist.selected.intersectVessel.type === Chemist.type.vessel) {
+                        if(sele.intersectVessel &&sele.intersectVessel.type === Chemist.type.vessel) {
 
-                            Chemist.selected.dispatchEvent({type:"link"});
+                           sele.dispatchEvent({type:"link"});
                             //修正位置
-                            Chemist.moveObj(Chemist.selected);
+                            Chemist.moveObj(sele);
                         }
 
-                        Chemist.selected.dispatchEvent({type:"createBody", position: Chemist.selected.position});
+                       sele.dispatchEvent({type:"createBody", position:sele.position});
 
 
                     }
                 }else {
                     //未绑定
 
-                  if (Chemist.selected.left) {
+                  if (sele.left) {
                       //select是主体
-                      Chemist.selected.position.y = Chemist.pipePosition.y;
+                     sele.position.y = Chemist.pipePosition.y;
 
                       //为两侧分支计算intersectVessel
-                      Chemist.selected.left.intersectVessel = Chemist.getIntersectVessel(Chemist.selected.left);
-                      Chemist.selected.right.intersectVessel = Chemist.getIntersectVessel(Chemist.selected.right);
+                     sele.left.intersectVessel = Chemist.getIntersectVessel(sele.left);
+                     sele.right.intersectVessel = Chemist.getIntersectVessel(sele.right);
 
                       //监测绑定，并触发绑定事件
-                       if(Chemist.selected.left.intersectVessel && Chemist.selected.left.intersectVessel.type === Chemist.type.vessel && !Chemist.selected.left.link) {
-                           Chemist.selected.left.dispatchEvent({type:"link"});
+                       if(sele.left.intersectVessel &&sele.left.intersectVessel.type === Chemist.type.vessel && !sele.left.link) {
+                          sele.left.dispatchEvent({type:"link"});
                            //修正位置
-                           Chemist.moveObj(Chemist.selected.left);
-                       }else if (Chemist.selected.right.intersectVessel && Chemist.selected.right.intersectVessel.type === Chemist.type.vessel && !Chemist.selected.right.link) {
-                           Chemist.selected.right.dispatchEvent({type:"link"});
+                           Chemist.moveObj(sele.left);
+                       }else if (sele.right.intersectVessel &&sele.right.intersectVessel.type === Chemist.type.vessel && !sele.right.link) {
+                          sele.right.dispatchEvent({type:"link"});
                            //修正位置
-                           Chemist.moveObj(Chemist.selected.right);
+                           Chemist.moveObj(sele.right);
                        }
 
-                  }else if (Chemist.selected.body) {
+                  }else if (sele.body) {
                       //select是两侧分支
-                      Chemist.selected.position.y = Chemist.pipePosition.y - Chemist.selected.length / 2;
+                     sele.position.y = Chemist.pipePosition.y -sele.length / 2;
 
                       //计算另一边的intersectVessel
-                      Chemist.selected.anotherSide.intersectVessel = Chemist.getIntersectVessel(Chemist.selected.anotherSide);
+                     sele.anotherSide.intersectVessel = Chemist.getIntersectVessel(sele.anotherSide);
 
                       //监测绑定，并触发绑定事件
-                      if(Chemist.selected.intersectVessel && Chemist.selected.intersectVessel.type === Chemist.type.vessel) {
+                      if(sele.intersectVessel &&sele.intersectVessel.type === Chemist.type.vessel) {
 
-                            Chemist.selected.dispatchEvent({type:"link"});
+                           sele.dispatchEvent({type:"link"});
                           //修正位置
-                          Chemist.moveObj(Chemist.selected);
-                      }else if (Chemist.selected.anotherSide.intersectVessel && Chemist.selected.anotherSide.intersectVessel.type === Chemist.type.vessel) {
-                          Chemist.selected.anotherSide.dispatchEvent({type:"link"});
+                          Chemist.moveObj(sele);
+                      }else if (sele.anotherSide.intersectVessel &&sele.anotherSide.intersectVessel.type === Chemist.type.vessel) {
+                         sele.anotherSide.dispatchEvent({type:"link"});
                           //修正位置
-                          Chemist.moveObj(Chemist.selected.anotherSide);
+                          Chemist.moveObj(sele.anotherSide);
                       }
 
                   }
@@ -292,16 +333,47 @@
 
           }
 
-          //
+          //酒精灯
+          if (sele.name === "burner") {
+
+              if(sele.oldIntersectVessel && sele.oldIntersectVessel.burner === sele) {
+                  sele.oldIntersectVessel.burner = null;
+                  sele.oldIntersectVessel = null;
+                  sele.onIronSupport = false;
+              }
+
+              if( sele.intersectVessel && sele.intersectVessel.name === "ironSupport" && !sele.intersectVessel.burner){
+                   sele.intersectVessel.burner = sele;
+                  sele.onIronSupport = true;
+                  Chemist.moveObj(sele, sele.intersectVessel.position.clone().add(sele.intersectVessel.burnerPosition));
+              }
+
+          }
+
+          //铁架台
+          if (sele.name === "ironSupport") {
+                //TODO
+             sele.position.y = Chemist.center.y;
+
+              Chemist.moveObj(sele);
+          }
+
+          if (sele.name === "ironSupport_bar") {
+              //TODO
+             sele.base.position.y = Chemist.center.y;
+
+              Chemist.moveObj(sele.base);
+
+          }
 
 
           //超出桌面的selected抛弃
-          if ( Chemist.isDiscard(Chemist.selected) ) {
-             Chemist.removeObj(Chemist.selected);
+          if ( Chemist.isDiscard(sele) ) {
+             Chemist.removeObj(sele);
           }
 
-          if (Chemist.selected.getStatus() === Chemist.status.moving) {
-              Chemist.selected.status.pop();
+          if (sele.getStatus() === Chemist.status.moving) {
+             sele.status.pop();
           }
       };
     
@@ -410,6 +482,13 @@
 
     };
 
+    /**
+     * 生成火
+     * @param obj 生火的对象
+     * @param offset
+     * @param color
+     * @param disappear 点火后火柴是否消失
+     */
     var generateFire = function (obj, offset, color, disappear) {
         Chemist.addFire(obj, 0.8, color, offset);
         if (disappear && obj.target){
@@ -483,14 +562,16 @@
     
     
     //绑定器材事件
+     var equipments = $("#equipments"),li;
     for ( o in equips ) {
         if( equips.hasOwnProperty(o) ) {
-            $("#" + equips[o].id).bind("click",equips[o].create);
+            li = $("<li>").bind("click",equips[o].create).append($("<img>").attr({"alt": equips[o].name, "src": equips[o].img}));
+            equipments.append(li);
         }    
     }    
    
    //绑定药品
-    var chemicals = $("#chemicalList"), li, btn;
+    var chemicals = $("#chemicalList"), btn;
    for (o in liquids) {
         if (liquids.hasOwnProperty(o) ) {
             li = $("<li>");
@@ -518,7 +599,7 @@
             .bind("click", (function(event){
                 var obj = solids[o];
                 return function (event) {
-                    var stick = new Chemist.Stick(Chemist.beakerPosition, 0.5, obj );
+                    var stick = new Chemist.Stick(Chemist.beakerPosition, 0.5, obj, obj.key+"_bar");
                     stick.rotation.z =  Math.PI / 2;
                     stick.direct.applyAxisAngle(new THREE.Vector3(0, 0, 1), Math.PI / 2);
                     stick.position.y = Chemist.stickPosition.y;
@@ -550,7 +631,7 @@
             Chemist.Tools.glassBar.position.copy(Chemist.beakerPosition);
             Chemist.Tools.glassBar.position.y += Chemist.Tools.glassBar.length / 2;
         }else{
-            Chemist.Tools.glassBar = new Chemist.Stick(Chemist.beakerPosition, 0.8, {color: 0xffffff}, true);
+            Chemist.Tools.glassBar = new Chemist.Stick(Chemist.beakerPosition, 0.8, {color: 0xffffff}, "glassBar" , true);
             Chemist.Tools.glassBar.canFire = false;
             Chemist.Tools.glassBar.position.y += Chemist.Tools.glassBar.length / 2;
         }
@@ -563,7 +644,7 @@
             Chemist.Tools.match.fire.position.copy(Chemist.Tools.match.position);
             Chemist.Tools.match.fire.position.add(Chemist.Tools.match.fire.offset);
         }else{
-            Chemist.Tools.match = new Chemist.Stick(Chemist.beakerPosition, 0.3, {color: 0xffff00});
+            Chemist.Tools.match = new Chemist.Stick(Chemist.beakerPosition, 0.3, {color: 0xffff00}, "match");
             Chemist.Tools.match.position.y = Chemist.stickPosition.y;
             Chemist.Tools.match.rotation.z = Math.PI / 2;
             Chemist.Tools.match.direct.applyAxisAngle(new THREE.Vector3(0, 0, 1), Math.PI / 2).normalize();

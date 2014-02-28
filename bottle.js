@@ -1,28 +1,29 @@
 
 
 Chemist.Bottle = function (position, callback) {
-     var beaker = null;
+     var bottle = null, scale = 0.01;
      
-    Chemist.objLoader.load("obj/beaker.obj", function (objects) {       
-        beaker = objects.children[0];
+    Chemist.objLoader.load("obj/bottle.obj", function (objects) {
+        bottle = objects.children[0];
 
-        beaker.material.transparent = true;
-        beaker.material.opacity = 0.3;
-        beaker.material.refractionRatio = 0.85;
-        beaker.position.copy(position);
-        beaker.scale.set(0.5, 0.5, 0.5);
-        beaker.castShadow = true;
+        bottle.material.transparent = true;
+        bottle.material.opacity = 0.3;
+        bottle.material.refractionRatio = 0.85;
+        bottle.position.copy(position);
+        bottle.scale.set(scale, scale, scale);
+        bottle.castShadow = true;
 
-        Chemist.Base.call(beaker, {
+        Chemist.Base.call(bottle, {
             type: Chemist.type.container,
-            scale: 0.5,
-            ot: new THREE.Vector3(0.74, 1.52, 0)
+            scale: scale,
+            ot: new THREE.Vector3(17.97, 88.5, 0),
+            name: "bottle"
         });
 
-        Chemist.scene.add(beaker);
-        Chemist.objects.push(beaker);
+        Chemist.scene.add(bottle);
+        Chemist.objects.push(bottle);
 
-        callback && callback(beaker);
+        callback && callback(bottle);
     });
 };
 

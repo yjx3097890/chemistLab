@@ -17,8 +17,9 @@ THREE.Fire = function (size, color) {
 		vertexShader: THREE.ShaderFire.candelFire.vertexShader,
 		fragmentShader: THREE.ShaderFire.candelFire.fragmentShader,
     side: THREE.DoubleSide,
-    depthTest: false,
-    transparent: true
+    depthTest: true,
+    transparent: true,
+    opacity: 0.5
     } );
     
     firePlane = new THREE.Object3D();

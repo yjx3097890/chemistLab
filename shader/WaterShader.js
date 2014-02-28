@@ -14,7 +14,7 @@ THREE.WaterShader = {
             "vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);", 
             "gl_Position = projectionMatrix * mvPosition;",
             
-            "if(dot(position - vec3(0.0, 0.2, 0.0), normal) <= 0.0){",
+            "if(dot(position - vec3(0.0, 1.0, 0.0), normal) <= 0.0){",
                 "show = 1.0;",
                 "}else{",
                 "show = -1.0;",
