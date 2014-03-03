@@ -52,6 +52,7 @@ var Chemist = {
         projector : new THREE.Projector(),
         objLoader : new THREE.OBJLoader(),
         OTLoader : new THREE.OBJMTLLoader(),
+        loadQueue : new createjs.LoadQueue(true),
 
 
         ambientLient : new THREE.AmbientLight(0x9C9C9C),
@@ -455,9 +456,6 @@ var Chemist = {
                     boxb.expandByPoint(fireBox.max);
                 }
             }
-
-            //TODO 有一物体为导管时
-
 
             return boxa.isIntersectionBox(boxb);    
         },

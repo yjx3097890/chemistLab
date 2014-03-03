@@ -186,3 +186,17 @@ body {
     font: bolder 30px monospace;
     text-align: center;
 }
+
+.loading-indicator {
+    height: 40px;
+    width: 40px;
+    background: url( 'images/loading.gif' );
+    background-repeat: no-repeat;
+    background-position: center center;
+}
+
+.loading-indicator-overlay {
+    background-color: #FFFFFF;
+    opacity: 0.8;
+    filter: alpha(opacity = 80);
+}
