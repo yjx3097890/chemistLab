@@ -160,10 +160,7 @@
             Chemist.addFire(Chemist.Tools.match, 0.8, null, new THREE.Vector3(0, 0.35, 0));
         }
     });
-<<<<<<< HEAD
 
-=======
->>>>>>> 60774eae1797823eb7c2b3f7dbfcecd15dcef993
  });
 
 })(Chemist);
