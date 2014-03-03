@@ -55,6 +55,7 @@ var Chemist = {
         loadQueue : new createjs.LoadQueue(true),
 
 
+
         ambientLient : new THREE.AmbientLight(0x9C9C9C),
         directionalLight : (function () {
             var light = new THREE.DirectionalLight(0xffeedd, 0.8);

@@ -185,6 +185,7 @@ body {
     height: 25%;
     font: bolder 30px monospace;
     text-align: center;
+
 }
 
 .loading-indicator {
@@ -199,4 +200,5 @@ body {
     background-color: #FFFFFF;
     opacity: 0.8;
     filter: alpha(opacity = 80);
+
 }
