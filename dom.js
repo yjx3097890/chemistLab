@@ -4,7 +4,6 @@
 
  $(function(){
 
-     $("body").showLoading();
 
      window.onload = function () {
          
