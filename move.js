@@ -439,16 +439,14 @@
             }
         }
 
-        //if防止没倒完就重新设置
-        if( !Chemist.target ) {
-            Chemist.target = Chemist.selected;
-        }
+
         if(Chemist.selected.target.liquid || Chemist.selected.target.solid) {
             var args = Chemist.beforeDump(Chemist.selected.target, Chemist.selected);
-            Chemist.target.args =  args;
+            Chemist.selected.args =  args;
 
         }
 
+        Chemist.selected.hasSetLevel = true;
         //删除scaleLeve
         discardScaleLevel(event);
     };

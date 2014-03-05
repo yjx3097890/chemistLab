@@ -184,85 +184,89 @@ var Chemist = {
                 }
             }
 
-            if (Chemist.target && Chemist.target.getStatus() === Chemist.status.influxing && Chemist.target.target.type === Chemist.type.vessel) {
+            for ( i = 0, len = Chemist.objects.length; i < len; i++) {
+                //Chemist.objects的元素变化后，vessel就有可能是undefined
+                var vessel = Chemist.objects[i];
 
-                //倾倒液体
-                if (Chemist.target.target.liquid) {
+                if (vessel && vessel.hasSetLevel && vessel.getStatus() === Chemist.status.influxing && vessel.target.type === Chemist.type.vessel) {
 
-                    Chemist.dumpWater(Chemist.target.target, Chemist.target, function () {
+                    //倾倒液体
+                     //倾倒的杯子恢复原状,vessel是倒入的杯子，vessel.target是倒出的杯子
+                    if (vessel.target && vessel.target.liquid) {
 
-                        //倾倒的杯子恢复原状,Chemist.target是倒入的杯子，Chemist.target.target是导出的杯子
-                        Chemist.target.status.pop();
-                        Chemist.target.target.status.pop();
+                        Chemist.dumpWater(vessel.target, vessel, function (dumpedObj) {
 
-                        Chemist.dumpOver(Chemist.target);
+                            dumpedObj.status.pop();
+                            dumpedObj.target.status.pop();
 
-                        Chemist.target.target.waterPillar.args.position.copy(Chemist.hiddenPosition);
-                        Chemist.scene.remove(Chemist.target.target.waterPillar);
-                        Chemist.waterPillar.remove(Chemist.target.target.waterPillar);
-                        Chemist.target.target.waterPillar = null;
+                            Chemist.dumpOver(dumpedObj);
 
-                    });
-                }else if(Chemist.target.target.solid) {
-                //倾倒固体
-                    Chemist.dumpSolid(Chemist.target.target, Chemist.target, function () {
+                        });
+                    }
 
-                        //倾倒的杯子恢复原状,Chemist.target是倒入的杯子，Chemist.target.target是导出的杯子
-                        Chemist.target.status.pop();
-                        Chemist.target.target.status.pop();
+                    if(vessel.target && vessel.target.solid) {
+                    //倾倒固体
+                        Chemist.dumpSolid(vessel.target, vessel, function (dumpedObj) {
 
-                        Chemist.dumpOver(Chemist.target);
+                            //倾倒的杯子恢复原状,vessel是倒入的杯子，vessel.target是导出的杯子
+                            dumpedObj.status.pop();
+                            dumpedObj.target.status.pop();
+
+                            Chemist.dumpOver(dumpedObj);
 
 
-                    });
-                }else{
-                    //倾倒的空杯子恢复原状
-                    Chemist.target.status.pop();
-                    Chemist.target.target.status.pop();
+                        });
+                    }
 
-                    Chemist.dumpOver(Chemist.target);
+                    if(vessel.target && !vessel.target.liquid && !vessel.target.solid) {
+                        //倾倒的空杯子恢复原状
+                        vessel.status.pop();
+                        vessel.target.status.pop();
+
+                        Chemist.dumpOver(vessel);
+                    }
+
+                }else if ( vessel && vessel.hasSetLevel && vessel.getStatus() === Chemist.status.influxing && vessel.target.type === Chemist.type.container ) {
+
+                    //从罐子中取液体
+                    if (vessel.target.liquid) {
+                        Chemist.dumpWater(vessel.target, vessel, function (dumpedObj) {
+
+                            //倾倒的罐子直接移除
+                            dumpedObj.status.pop();
+                            dumpedObj.target.status.pop();
+
+                            dumpedObj.target.waterPillar.args.position.copy(Chemist.hiddenPosition);
+                            Chemist.scene.remove(dumpedObj.target.waterPillar);
+                            Chemist.waterPillar.remove(dumpedObj.target.waterPillar);
+                            dumpedObj.target.waterPillar = null;
+
+                            Chemist.removeObj(dumpedObj.target);
+                            //取消联系
+                            dumpedObj.target = null;
+                            dumpedObj.hasSetLevel = false;
+                            dumpedObj.args = null;
+
+                        });
+                    }else {
+
+                        //从罐子中取固体
+                        Chemist.dumpSolid(vessel.target, vessel, function (dumpedObj) {
+
+                            //倾倒的罐子直接移除
+                            dumpedObj.status.pop();
+                            dumpedObj.target.status.pop();
+
+                            Chemist.removeObj(dumpedObj.target);
+                            //取消联系
+                            dumpedObj.target = null;
+                            dumpedObj.hasSetLevel = false;
+                            dumpedObj.args = null;
+
+                        });
+                    }
+
                 }
-
-            }else if ( Chemist.target && Chemist.target.getStatus() === Chemist.status.influxing && Chemist.target.target.type === Chemist.type.container ) {
-
-                //从罐子中取液体
-                if (Chemist.target.target.liquid) {
-                    Chemist.dumpWater(Chemist.target.target, Chemist.target, function () {
-
-                        //倾倒的罐子直接移除
-                        Chemist.target.status.pop();
-                        Chemist.target.target.status.pop();
-
-                        Chemist.target.target.waterPillar.args.position.copy(Chemist.hiddenPosition);
-                        Chemist.scene.remove(Chemist.target.target.waterPillar);
-                        Chemist.waterPillar.remove(Chemist.target.target.waterPillar);
-                        Chemist.target.target.waterPillar = null;
-
-                        Chemist.removeObj(Chemist.target.target);
-                        //取消联系
-                        Chemist.target.target = null;
-                        Chemist.target.args = null;
-                        Chemist.target = null;
-
-                    });
-                }else {
-
-                    //从罐子中取固体
-                    Chemist.dumpSolid(Chemist.target.target, Chemist.target, function () {
-
-                        //倾倒的罐子直接移除
-                        Chemist.target.status.pop();
-                        Chemist.target.target.status.pop();
-
-                        Chemist.removeObj(Chemist.target.target);
-                        //取消联系
-                        Chemist.target.target = null;
-                        Chemist.target.args = null;
-                        Chemist.target = null;
-
-                    });
-                }
-
             }
 
 
@@ -270,7 +274,7 @@ var Chemist = {
             
             //反应
             for ( i = 0, len = Chemist.objects.length; i < len; i++) {
-                var vessel = Chemist.objects[i], key = "", tempArray=[];
+                  vessel = Chemist.objects[i], key = "", tempArray=[];
                 //监测反应
                 if (vessel.type === Chemist.type.vessel) {
 

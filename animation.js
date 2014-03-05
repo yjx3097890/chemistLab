@@ -93,12 +93,12 @@
                 if ( dumpedObj.liquid.position.y + dumpedObj.liquid.geometry.height / 2 - dumpedObj.position.y >= dumpedObj.waterHeight * dumpedObj.height) {
                     dumpObj.liquid.position.y = dumpObj.position.y + dumpObj.waterHeight * dumpObj.height - dumpObj.liquid.geometry.height / 2;
                     Chemist.mixChemicals(dumpedObj, dumpObj);
-                    callback();
+                    callback(dumpedObj);
                 }
                 
             }else {
 
-                callback();
+                callback(dumpedObj);
             }
             
         }else{
@@ -106,7 +106,7 @@
                 //向空杯中倒，先生成液体
                 dumpedObj.liquid = Chemist.addLiquid(dumpedObj, dumpObj.liquid.detail.key, 0, true);
             }else {
-                callback();
+                callback(dumpedObj);
             }
         }
     };
@@ -139,15 +139,15 @@
                     Chemist.deletePiece(dumpObj, dumpedObj.solidCount);
                     dumpedObj.currentNum = 0;
                     dumpedObj.solidCount +=  dumpedObj.oldSolidCount;
-                    callback();
+                    callback(dumpedObj);
                 }
 
             }else{
-                callback();
+                callback(dumpedObj);
             }
         } else if (!dumpObj.solid) {
 
-                 callback();
+                 callback(dumpedObj);
 
         }
 
@@ -185,6 +185,12 @@
         }
 
 
+        if (dumpedObj.target.waterPillar) {
+            dumpedObj.target.waterPillar.args.position.copy(Chemist.hiddenPosition);
+            Chemist.scene.remove(dumpedObj.target.waterPillar);
+            Chemist.waterPillar.remove(dumpedObj.target.waterPillar);
+            dumpedObj.target.waterPillar = null;
+        }
 
         Chemist.moveObj(dumpedObj.target);
 
@@ -192,9 +198,9 @@
         dumpedObj.target.intersectVessel = null;
         dumpedObj.target = null;
         dumpedObj.args = null;
+        dumpedObj.hasSetLevel = false;
         dumpedObj = null;
 
-        Chemist.target = null;
     };
 
      //生成移动的水平面标尺
