@@ -29,6 +29,28 @@ Chemist.Beaker = function (position, callback) {
         Chemist.scene.add(beaker);
         Chemist.objects.push(beaker);
 
+        beaker.addEventListener("checkGas", function (event) {
+            var len = this.pipes.length, i, pipe, otherLink;
+                for (i = len -1 ; i >= 0; i--){
+                    pipe = this.pipes[i];
+                    otherLink = pipe.anotherSide.link ;
+                    if(this.gas && otherLink) {
+                        if (otherLink.gas) {
+                            if(!_.isEqual(otherLink.gas.detail.ingredient, this.gas.detail.ingredient)){
+                                otherLink.gas.detail.ingredient = _.union(otherLink.gas.detail.ingredient, this.gas.detail.ingredient);
+                            }
+                        }else{
+
+                            otherLink.gas = {};
+                            otherLink.gas.detail = Chemist.clone(this.gas.detail);
+                            otherLink.gas.bubbles = Chemist.addBubbles(otherLink);
+
+                        }
+                    }
+                }
+
+        });
+
         callback && callback(beaker);
     });
 };

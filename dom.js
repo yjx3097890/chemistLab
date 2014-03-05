@@ -6,11 +6,14 @@
 
 
      window.onload = function () {
-         
-         Chemist.loadQueue.on("complete", function () {
-            $("body").hideLoading();
 
-         }, this);
+         var onFileLoad = function () {
+            $("body").hideLoading();
+   //          Chemist.loadQueue.off("fileload", arguments.callee);
+         };
+
+         Chemist.loadQueue.on("complete", onFileLoad, this);
+
          //预加载模型
          Chemist.loadQueue.loadFile({src: "obj/beaker.obj"});
          Chemist.loadQueue.loadFile({src: "obj/bottle.obj"});
@@ -20,6 +23,7 @@
          Chemist.loadQueue.loadFile({src: "obj/ironSupport/dizuo.mtl"});
          Chemist.loadQueue.loadFile({src: "obj/ironSupport/zaiju.obj"});
          Chemist.loadQueue.loadFile({src: "obj/ironSupport/qianzi.obj"});
+         Chemist.loadQueue.loadFile({src: "obj/ironSupport/yincaizhi.bmp"});
      };
 
     //切换桌布

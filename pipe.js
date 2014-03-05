@@ -169,7 +169,7 @@ Chemist.Pipe = function (position) {
             Chemist.objects.remove(this);
 
             // this要连有气泡的
-            if (this.link.gas  ) {
+            if (this.link.gas ) {
                 var detail = Chemist.Chemicals.gases[this.link.gas.detail.key];
                 //记录导管属性
                 if(this.gas) {

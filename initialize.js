@@ -81,6 +81,7 @@ var Chemist = {
         stickPosition : new THREE.Vector3(0, - 0.2, 0),
         pipePosition : new THREE.Vector3(0, 0, 0),
         hiddenPosition : new THREE.Vector3(Number.POSITIVE_INFINITY, Number.POSITIVE_INFINITY, Number.POSITIVE_INFINITY),
+        waterPillar : [], //所有水柱
         objects : [],  //会被鼠标选择的东西
         plane : null,
         virtualPlaneH : null,
@@ -164,10 +165,13 @@ var Chemist = {
         beforeRender : function () {
             var delta = Chemist.clock.getDelta(), i, len, temp;
 
-            if (Chemist.waterPillar) {
-                Chemist.waterPillar.geometry.verticesNeedUpdate = true;
-                Chemist.waterPillar.geometry.colorsNeedUpdate = true;
-                Chemist.waterPillar.material.needUpdates = true;
+            if ( (len=Chemist.waterPillar.length) > 0) {
+                for(i=len-1; i>=0;i-- ){
+                    temp = Chemist.waterPillar[i];
+                    temp.geometry.verticesNeedUpdate = true;
+                    temp.geometry.colorsNeedUpdate = true;
+                    temp.material.needUpdates = true;
+                }
             }
 
             //运动轨迹动画
@@ -193,9 +197,10 @@ var Chemist = {
 
                         Chemist.dumpOver(Chemist.target);
 
-                        Chemist.waterPillar.args.position.copy(Chemist.hiddenPosition);
-                        Chemist.scene.remove(Chemist.waterPillar);
-                        Chemist.objects.remove(Chemist.waterPillar);
+                        Chemist.target.target.waterPillar.args.position.copy(Chemist.hiddenPosition);
+                        Chemist.scene.remove(Chemist.target.target.waterPillar);
+                        Chemist.waterPillar.remove(Chemist.target.target.waterPillar);
+                        Chemist.target.target.waterPillar = null;
 
                     });
                 }else if(Chemist.target.target.solid) {
@@ -228,9 +233,10 @@ var Chemist = {
                         Chemist.target.status.pop();
                         Chemist.target.target.status.pop();
 
-                        Chemist.waterPillar.args.position.copy(Chemist.hiddenPosition);
-                        Chemist.scene.remove(Chemist.waterPillar);
-                        Chemist.objects.remove(Chemist.waterPillar);
+                        Chemist.target.target.waterPillar.args.position.copy(Chemist.hiddenPosition);
+                        Chemist.scene.remove(Chemist.target.target.waterPillar);
+                        Chemist.waterPillar.remove(Chemist.target.target.waterPillar);
+                        Chemist.target.target.waterPillar = null;
 
                         Chemist.removeObj(Chemist.target.target);
                         //取消联系
@@ -274,10 +280,13 @@ var Chemist = {
                     if(vessel.solid && vessel.solid.length>0 && vessel.getStatus !== Chemist.status.reacting) {
                         tempArray =  tempArray.concat(vessel.solid.detail.ingredient);
                     }
+                    if(vessel.gas && vessel.getStatus() !== Chemist.status.reacting) {
+                        tempArray = tempArray.concat(vessel.gas.detail.ingredient);
+                    }
                     if(tempArray.length>0){
                         key = _.uniq(tempArray.sort(), true).join("+");
                     }
-                    if ( key.length > 0 && Chemist.Reactions[key]) {
+                    if ( key.length > 0 && Chemist.Reactions[key] && Chemist.Reactions[key].condition(vessel)) {
                         vessel.reaction = Chemist.clone(Chemist.Reactions[key]);
                         vessel.status.push(Chemist.status.reacting);
                     }

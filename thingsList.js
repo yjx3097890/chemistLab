@@ -117,6 +117,16 @@
                 burningColor : null,
                 ingredient : ["copperHydroxide"], //成分
                 meltingPoint : 80
+            },
+            calciumCarbonate : {
+                id : "CaCO3",
+                key : "calciumCarbonate",
+                name : "碳酸钙",
+                color : 0xFFFFFF,
+                solutionColor : null,
+                burningColor : null,
+                ingredient : ["calciumCarbonate"], //成分
+                meltingPoint : 825
             }
         },
 
@@ -174,6 +184,24 @@
                 ingredient: ["copperSulfate"],
                 percent : 0.1,
                 ph : 4
+            },
+            sodiumBicarbonate : {
+                id : "NaHCO3",
+                key : "sodiumBicarbonate",
+                name : "碳酸氢钠",
+                color : 0x5E89CB,
+                ingredient : ["sodiumBicarbonate"], //成分
+                percent: 0.5,
+                ph: 9
+            },
+            calciumHydroxide : {
+                id : "CaOH2",
+                key : "calciumHydroxide",
+                name : "氢氧化钙",
+                color : 0x5E89CB,
+                ingredient : ["calciumHydroxide"], //成分
+                percent: 0.02,
+                ph: 12
             }
 
         },
@@ -186,7 +214,16 @@
                 color : null,
                 burningColor : 0x8DA9EA,
                 ingredient: ["hydrogen"]
+            },
+            carbonDioxide: {
+                id: "CO2",
+                key: "carbonDioxide",
+                name: "二氧化碳",
+                color : null,
+                burningColor : null,
+                ingredient: ["carbonDioxide"]
             }
+
         }
     };
         

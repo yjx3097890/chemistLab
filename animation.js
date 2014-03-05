@@ -27,7 +27,7 @@
     //设置level高度后，倾斜烧杯，生成下落的水柱或固体，返回杯子旋转的参数
     Chemist.beforeDump = function (dumpObj, dumpedObj) {
 
-        //dunpObj 倾斜
+        //dumpObj 倾斜
         var vec3 = dumpedObj.position.clone().sub(dumpObj.position),
             roAxis = vec3.clone().cross(dumpObj.ot).normalize(),
             roAlpha = - Math.PI / 6; // 倾斜的角度
@@ -44,17 +44,12 @@
 
             //如果有水，生成水柱
             var pillarPosition = dumpObj.position.clone().add(dumpObj.ot);
-            if ( !Chemist.waterPillar || !Chemist.waterPillar.args.color.equals(new THREE.Color( dumpObj.liquid.detail.color ))) {
 
-                Chemist.waterPillar = new THREE.Pillar(pillarPosition.clone(), 0.2, new THREE.Color( dumpObj.liquid.detail.color ), 0.2, 1.4);
-                Chemist.waterPillar.type = Chemist.type.pillar;
-                Chemist.scene.add(Chemist.waterPillar);
-                Chemist.objects.push(Chemist.waterPillar);
-            } else {
-                Chemist.waterPillar.args.position.copy(pillarPosition);
-                Chemist.scene.add(Chemist.waterPillar);
-                Chemist.objects.push(Chemist.waterPillar);
-            }
+                dumpObj.waterPillar = new THREE.Pillar(pillarPosition.clone(), 0.2, new THREE.Color( dumpObj.liquid.detail.color ), 0.2, 1.4);
+                dumpObj.waterPillar.type = Chemist.type.pillar;
+                Chemist.waterPillar.push(dumpObj.waterPillar);
+                Chemist.scene.add(dumpObj.waterPillar);
+
         }
 
         //有固体倾斜
@@ -242,6 +237,9 @@
              bubble.tween = Chemist.utils.moveTo(bubble.position, {y : height}, null, null, onComplete, true);
          }
          bubbles.position.copy(vessel.position);
+
+        vessel.dispatchEvent({type:"checkGas"});
+
         Chemist.scene.add(bubbles);
         return bubbles;
     };
