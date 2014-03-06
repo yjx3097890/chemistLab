@@ -77,7 +77,7 @@
      var equipments = $("#equipments"),li;
     for ( o in equips ) {
         if( equips.hasOwnProperty(o) ) {
-            li = $("<li>").bind("click",equips[o].create).append($("<img>").attr({"alt": equips[o].name, "src": equips[o].img}));
+            li = $("<li>").bind("click",equips[o].create).append($("<img>").attr({"alt": equips[o].name, "src": equips[o].img, title :  equips[o].name}));
             equipments.append(li);
         }    
     }    
@@ -87,7 +87,7 @@
    for (o in liquids) {
         if (liquids.hasOwnProperty(o) ) {
             li = $("<li>");
-            btn = $("<button>").addClass("btn btn-info btn-sm").html(liquids[o].name)
+            btn = $("<img>").attr({"alt": liquids[o].name, "src": liquids[o].img})
                 .bind("click", (function(event){
                 var obj = o;
                 return function (event) {   
@@ -107,7 +107,7 @@
     for (o in solids) {
         if (solids.hasOwnProperty(o) ) {
             li = $("<li>");
-            btn = $("<button>").addClass("btn btn-info btn-sm").html(solids[o].name+"棒")
+            btn = $("<div>").css({position: "absolute", width: "30px", height: "40px", right: 0, "z-index": 100, color: "#"+solids[o].color.toString(16), "font-size": "20px", cursor: "pointer"}).html("棒")
             .bind("click", (function(event){
                 var obj = solids[o];
                 return function (event) {
@@ -118,7 +118,7 @@
                 };
             })());
             li.append(btn);
-            btn = btn.clone().html(solids[o].name).bind("click", (function(event){
+            btn = $("<img>").attr({"alt": solids[o].name, "src": solids[o].img, title: solids[o].name}).bind("click", (function(event){
                 var obj = o;
                 return function (event) {
                     Chemist.Bottle(Chemist.beakerPosition, function (bottle) {

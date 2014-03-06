@@ -20,7 +20,7 @@
         //器材
     Chemist.Equips = {
         beaker : {
-            name : "beaker",
+            name : "烧杯",
             id : "beaker",
             img : ip + "beaker.jpg",
             create : function () {
@@ -29,7 +29,7 @@
         },
 
         burner : {
-            name : "burner",
+            name : "酒精灯",
             id : "burner",
             img : ip + "burner.jpg",
             create : function () {
@@ -38,7 +38,7 @@
         },
 
         testTube : {
-            name : "testTube",
+            name : "试管",
             id : "testTube",
             img : ip + "testTube.jpg",
             create : function () {
@@ -47,7 +47,7 @@
         },
 
         pipe : {
-            name : "pipe",
+            name : "导管",
             id : "pipe",
             img : ip + "pipe.jpg",
             create : function () {
@@ -56,7 +56,7 @@
         },
 
         ironSupport : {
-            name : "ironSupport",
+            name : "铁架台",
             id: "ironSupport",
             img : ip + "ironSupport.jpg",
             create : function () {
@@ -72,6 +72,7 @@
                 id : "Na",
                 key : "sodium",
                 name : "钠",
+                img : ip + "sodium.jpg",
                 color : 0xffffff,
                 solutionColor : null,     //溶液颜色
                 burningColor : 0xF4FE81,
@@ -82,6 +83,7 @@
                 id : "Cu",
                 key : "copper",
                 name : "铜",
+                img : ip + "copper.jpg",
                 color : 0xB58442,
                 solutionColor : null,
                 burningColor : 0x0EA107,
@@ -92,6 +94,7 @@
                 id : "Zn",
                 key : "zinc",
                 name : "锌",
+                img : ip + "zinc.jpg",
                 color : 0xA7B3D0,
                 solutionColor : null,
                 burningColor : 0x33C6FA,
@@ -102,6 +105,7 @@
                 id : "CuO",
                 key : "copperOxide",
                 name : "氧化铜",
+                img : ip + "copperOxide.jpg",
                 color : 0x352621,
                 solutionColor : null,
                 burningColor : 0xF4FE81,
@@ -112,6 +116,7 @@
                 id : "CuOH2",
                 key : "copperHydroxide",
                 name : "氢氧化铜",
+                img : ip + "copperHydroxide.jpg",
                 color : 0x0159FC,
                 solutionColor : null,
                 burningColor : null,
@@ -122,6 +127,7 @@
                 id : "CaCO3",
                 key : "calciumCarbonate",
                 name : "碳酸钙",
+                img : ip + "calciumCarbonate.jpg",
                 color : 0xFFFFFF,
                 solutionColor : null,
                 burningColor : null,
@@ -135,6 +141,7 @@
                 id : "H2O",
                 key : "water",
                 name : "水",
+                img : ip + "water.jpg",
                 color : 0x5E89CB,
                 ingredient : [], //成分
                 percent : 0.0,
@@ -144,6 +151,7 @@
                 id : "NaOH",
                 key : "sodiumHydroxide",
                 name : "氢氧化钠",
+                img : ip + "sodiumHydroxide.jpg",
                 color : 0x5E89CB,
                 ingredient : ["sodiumHydroxide"], //成分
                 percent : 0.5,
@@ -153,6 +161,7 @@
                 id : "HCl",
                 key : "hydrochloricAcid",
                 name : "盐酸",
+                img : ip + "hydrochloricAcid.jpg",
                 color : 0x5E89CB,
                 ingredient : ["hydrochloricAcid"], //成分
                 percent : 0.4,
@@ -162,6 +171,7 @@
                 id : "C20H14O4",
                 key : "phenolphthalein",
                 name : "酚酞",
+                img : ip + "phenolphthalein.jpg",
                 color : 0x5E89CB,
                 ingredient : ["phenolphthalein"], //成分
                 percent : 0,
@@ -171,6 +181,7 @@
                 id : "H2SO4",
                 key : "sulfuricAcid",
                 name : "硫酸",
+                img : ip + "sulfuricAcid.jpg",
                 color : 0x5E89CB,
                 ingredient : ["sulfuricAcid"],
                 percent : 0.98,
@@ -180,6 +191,7 @@
                 id : "CuSO4",
                 key: "copperSulfate",
                 name: "硫酸铜",
+                img : ip + "copperSulfate.jpg",
                 color : 0x217BF3,
                 ingredient: ["copperSulfate"],
                 percent : 0.1,
@@ -189,6 +201,7 @@
                 id : "NaHCO3",
                 key : "sodiumBicarbonate",
                 name : "碳酸氢钠",
+                img : ip + "sodiumBicarbonate.jpg",
                 color : 0x5E89CB,
                 ingredient : ["sodiumBicarbonate"], //成分
                 percent: 0.5,
@@ -198,6 +211,7 @@
                 id : "CaOH2",
                 key : "calciumHydroxide",
                 name : "氢氧化钙",
+                img : ip + "calciumHydroxide.jpg",
                 color : 0x5E89CB,
                 ingredient : ["calciumHydroxide"], //成分
                 percent: 0.02,
