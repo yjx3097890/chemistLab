@@ -39,6 +39,6 @@ Chemist.Base = function (options) {
     this.onIronSupport = false;
 
     this.detail = Chemist.clone(options.detail);
-    this.name = options.name || options.detail.name;
+    this.name = options.name || options.detail.id;
 
 };

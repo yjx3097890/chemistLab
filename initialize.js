@@ -869,11 +869,11 @@ var Chemist = {
              obj.sediment.position.y += obj.sediment.height * 2 / 3;
          }
 
-         if(obj.detail && obj.detail.name === "pipe") {
+         if(obj.detail && obj.detail.id === "pipe") {
              obj.dispatchEvent({type:"move", position: obj.position.clone()});
          }
 
-         if(obj.detail && obj.detail.name === "ironSupport") {
+         if(obj.detail && obj.detail.id === "ironSupport") {
             obj.dispatchEvent({type:"move", pos: obj.position.clone()});
          }
 
