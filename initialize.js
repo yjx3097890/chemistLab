@@ -34,8 +34,15 @@ var Chemist = {
         container : document.getElementById("container"),
         mouse : new THREE.Vector2(),  // [-1, 1]
         offset : new THREE.Vector3(), //物体位置与选中点的偏移量
+        objects : [],  //会被鼠标选择的东西
+        virtualPlaneH : null,
+        virtualPlaneV : null,
+        hovered : null,
+        selected : null,
         windowWidth : window.innerWidth,
 		windowHeight : window.innerHeight,
+        canvasWidth : window.innerWidth,
+        canvasHeight : window.innerHeight,
 
         camera : (function () {
            var camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 10000);
@@ -82,20 +89,17 @@ var Chemist = {
         pipePosition : new THREE.Vector3(0, 0, 0),
         hiddenPosition : new THREE.Vector3(Number.POSITIVE_INFINITY, Number.POSITIVE_INFINITY, Number.POSITIVE_INFINITY),
         waterPillar : [], //所有水柱
-        objects : [],  //会被鼠标选择的东西
         plane : null,
-        virtualPlaneH : null,
-        virtualPlaneV : null,
-        hovered : null,  
-        selected : null,   
         target: null,
         clock: new THREE.Clock(),
-        
-        mode : "normal",    //normal , dump
-        
-        init : function () {
+
+        init : function (callback) {
 
             this.controls = this.createControls(this.camera);
+
+            this.canvasWidth = this.windowWidth;
+            this.canvasHeight = this.windowHeight;
+            this.onWindowResize();
 
             this.scene.add(this.ambientLient);
    //        this.scene.add(this.directionalLight);
@@ -112,7 +116,7 @@ var Chemist = {
             this.renderer.shadowMapEnabled = true;
 			this.renderer.shadowMapType = THREE.PCFShadowMap;
             this.renderer.autoClear = false;
-            this.renderer.setSize(this.windowWidth, this.windowHeight);
+            this.renderer.setSize(this.canvasWidth, this.canvasHeight);
             this.container.appendChild(this.renderer.domElement);
           
             var rtParams = {
@@ -123,6 +127,26 @@ var Chemist = {
             };
             
             this.composer = new THREE.EffectComposer(this.renderer, new THREE.WebGLRenderTarget(this.windowWidth, this.windowHeight, rtParams));
+
+            var virtualPlaneH = this.virtualPlaneH = new Chemist.Platform();
+            virtualPlaneH.scale.set(20,30,1);
+            virtualPlaneH.visible = false;
+            virtualPlaneH.material.side = THREE.DoubleSide;
+            virtualPlaneH.type = this.type.virtual;
+            this.scene.add(virtualPlaneH);
+
+            var virtualPlaneV = this.virtualPlaneV = new Chemist.Platform();
+            virtualPlaneV.position.set(0, 0, 0);
+            virtualPlaneV.rotation.x = 0  ;
+            virtualPlaneV.scale.set(3,3,1);
+            virtualPlaneV.material.side = THREE.DoubleSide;
+            virtualPlaneV.visible = false;
+            virtualPlaneH.type = this.type.virtual;
+            this.scene.add(virtualPlaneV);
+
+            if (callback) {
+                callback.call(this);
+            }
         },
         
         createControls : function (camera) {
@@ -390,15 +414,19 @@ var Chemist = {
 
             Chemist.windowWidth = window.innerWidth;
             Chemist.windowHeight = window.innerHeight;
-			Chemist.camera.aspect = Chemist.windowWidth / Chemist.windowHeight;
+
+            Chemist.canvasWidth = Chemist.windowWidth;
+            Chemist.canvasHeight = Chemist.windowHeight;
+
+			Chemist.camera.aspect = Chemist.canvasWidth / Chemist.canvasHeight;
 			Chemist.camera.updateProjectionMatrix();
 
-			Chemist.renderer.setSize( Chemist.windowWidth , Chemist.windowHeight );
+			Chemist.renderer.setSize( Chemist.canvasWidth , Chemist.canvasHeight );
 
 		},
         
         getIntersect : function (obj) {
-            var point = new THREE.Vector3(this.mouse.x, this.mouse.y, 0),
+            var point = new THREE.Vector3(this.mouse.x, this.mouse.y, 0.5),
             raycaster = this.projector.pickingRay(point, this.camera),
             intersect  = raycaster.intersectObject(obj);
             return intersect[0];
@@ -427,6 +455,9 @@ var Chemist = {
         
         
         verdictPlaneMove : function () {
+            if (!Chemist.controls){
+                return;
+            }
             if (Chemist.isIntersect(Chemist.plane)) {
                 Chemist.controls.noRotate = false;
                 Chemist.controls.noPan = false;
@@ -438,7 +469,7 @@ var Chemist = {
             }
         },
         
-        //判断两容器是否重叠
+        //判断两容器是否重叠,AABB包围盒
         isSuperposition : function (objA, objB) {
             objA.geometry.computeBoundingBox();
             objB.geometry.computeBoundingBox();
@@ -645,9 +676,9 @@ var Chemist = {
             }
 
             var times = 0,
-                int = setInterval(function () {
+                inter = setInterval(function () {
                 if(times >= vessel.solidCount) {
-                    clearInterval(int);
+                    clearInterval(inter);
                     return;
                 }
                 solidMesh.push(Chemist.createPiece(vessel, solidName, vessel.height*2));
@@ -930,4 +961,4 @@ var Chemist = {
 
 
 };
-Chemist.init();
+

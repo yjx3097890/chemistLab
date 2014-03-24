@@ -3,8 +3,8 @@
     
     var onMouseMove = function (event) {
        
-        Chemist.mouse.x = event.clientX / Chemist.windowWidth * 2 - 1;
-        Chemist.mouse.y = - event.clientY / Chemist.windowHeight * 2 + 1;
+        Chemist.mouse.x = event.offsetX / Chemist.canvasWidth * 2 - 1;
+        Chemist.mouse.y = - event.offsetY / Chemist.canvasHeight * 2 + 1;
         Chemist.hovered = (Chemist.getIntersects()[0] || null )&& Chemist.getIntersects()[0].object;
 
 

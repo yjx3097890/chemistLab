@@ -104,7 +104,8 @@
         <div id="loading-indicator-undefined-overlay" class="loading-indicator-overlay" style="width: 100%; height: 100%; left: 0px; position: absolute; top: 0px; z-index: 5000;"></div>
         <div id="loading-indicator-undefined" class="loading-indicator" style="position: absolute; z-index: 5001; left: 50%; top: 50%;"></div>
 
-        <!-- 加载js库，发布时用mini版 --> 
+        <!-- 加载js库，发布时用mini版 -->
+        <!--
         <script type="text/javascript" src="libs/createjs/createjs/events/Event.js"></script>
         <script type="text/javascript" src="libs/createjs/createjs/events/EventDispatcher.js"></script>
         <script type="text/javascript" src="libs/createjs/createjs/utils/IndexOf.js"></script>
@@ -142,7 +143,9 @@
         <script type="text/javascript" src="libs/createjs/soundjs/WebAudioPlugin.js"></script>
         <script type="text/javascript" src="libs/createjs/soundjs/HTMLAudioPlugin.js"></script>
         <script type="text/javascript" src="libs/createjs/tweenjs/Tween.js"></script>
-        <script type="text/javascript" src="libs/createjs/tweenjs/Ease.js"></script>            
+        <script type="text/javascript" src="libs/createjs/tweenjs/Ease.js"></script>
+        -->
+        <script type="text/javascript" src="libs/createjs/preloadjs-0.4.1.min.js"></script>
         <!-- threejs -->
         <script type="text/javascript" src="libs/three.js"></script>
         <script type="text/javascript" src="libs/CurveExtras.js"></script>
@@ -184,6 +187,7 @@
         <script src="shader/WaterShader.js"></script>
         
         <!-- 自己开发的js-->
+
         <script type="text/javascript" src="initialize.js"></script>
         <script type="text/javascript" src="utils.js"></script>
         <script type="text/javascript" src="base.js"></script>
@@ -201,36 +205,16 @@
         <script type="text/javascript" src="fire.js"></script>
         <script type="text/javascript" src="animation.js"></script>
         <script type="text/javascript" src="reactions.js"></script>
-        
+
         <script type="text/javascript">
-       
-            Chemist.plane = new Chemist.Platform({img:"textures/Blue.jpg"});
-            Chemist.objects.push(Chemist.plane);
-            Chemist.scene.add(Chemist.plane);
+            Chemist.init(function() {
+                var plane = Chemist.plane = new Chemist.Platform({img:"textures/Blue.jpg"});
+                this.objects.push(plane);
+                this.scene.add(plane);
 
-            Chemist.virtualPlaneH = new Chemist.Platform();
-            Chemist.virtualPlaneH.scale.set(2,3,5);
-            Chemist.virtualPlaneH.visible = false; 
-            Chemist.virtualPlaneH.type = Chemist.type.virtual;
-            Chemist.scene.add(Chemist.virtualPlaneH);
-            
-            Chemist.virtualPlaneV = new Chemist.Platform();
-            Chemist.virtualPlaneV.position.set(0, 0, 0);
-            Chemist.virtualPlaneV.rotation.x = 0  ;
-            Chemist.virtualPlaneV.scale.set(2,3,5);
-            Chemist.virtualPlaneV.material.side = THREE.DoubleSide;
-            Chemist.virtualPlaneV.visible = false; 
-            Chemist.virtualPlaneH.type = Chemist.type.virtual;
-            Chemist.scene.add(Chemist.virtualPlaneV);
-
-
-
+            });
             Chemist.postProcess();
             Chemist.animate(Chemist.composerRender);
-
-
-
-
         </script>
     </body>
 </html>
